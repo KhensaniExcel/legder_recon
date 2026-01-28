@@ -1,0 +1,5 @@
+{
+  "name": "Ledger Recon Tool",
+  "description": "A professional-grade multi-company reconciliation platform for GL accounts like Revenue Control (9020) and Tenant Revenue (8055), featuring automated site derivation and a correction workflow.",
+  "requestFramePermissions": []
+}

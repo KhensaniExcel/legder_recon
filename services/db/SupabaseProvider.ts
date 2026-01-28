@@ -62,7 +62,7 @@ export class SupabaseProvider implements IDatabaseProvider {
     }
 
     async pushData(data: SyncData): Promise<boolean> {
-        if (!this.supabase) throw new Error("Supabase client not initialized");
+        if (!this.supabase) throw new Error("Supabase client not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env");
 
         const mapped = {
             companies: this.toDb(data.companies),
@@ -107,7 +107,7 @@ export class SupabaseProvider implements IDatabaseProvider {
     }
 
     async pullData(): Promise<SyncData> {
-        if (!this.supabase) throw new Error("Supabase client not initialized");
+        if (!this.supabase) throw new Error("Supabase client not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env");
 
         const [
             { data: companies },

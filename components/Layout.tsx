@@ -23,12 +23,12 @@ export default function Layout() {
         filters, setFilters,
         companies, entries,
         imports, directory, allocations, overrideLogs, journalInstructions, reconProfiles,
-        clearAllData
+        clearAllData,
+        syncStatus, setSyncStatus
     } = useReconStore();
 
     const [isSiteSelectorOpen, setIsSiteSelectorOpen] = useState(false);
     const [siteSearch, setSiteSearch] = useState('');
-    const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'success' | 'error'>('idle');
 
     // Site List Logic
     const siteList = useMemo(() => {
@@ -59,7 +59,7 @@ export default function Layout() {
             setTimeout(() => setSyncStatus('idle'), 3000);
         } catch (err: any) {
             setSyncStatus('error');
-            // console.error(err);
+            console.error(err);
         }
     };
 
@@ -108,6 +108,11 @@ export default function Layout() {
                     <button onClick={() => { if (window.confirm('Clear all?')) { clearAllData(); navigate('/import'); } }} className="w-full flex items-center justify-center gap-2 px-3 py-2 text-[10px] font-bold text-red-100 hover:bg-red-500/20 rounded border border-red-400/30 uppercase">
                         <Trash2 size={12} /> Clear Database
                     </button>
+                    {syncStatus === 'error' && (
+                        <div className="px-1 text-[9px] text-red-300 font-bold text-center animate-pulse">
+                            Sync Failed. Check Import Sync Tab.
+                        </div>
+                    )}
                 </div>
             </aside>
 

@@ -39,6 +39,12 @@ interface ReconState {
     addAllocation: (alloc: Allocation) => void;
     addJournalFix: (fix: JournalInstruction) => void;
     clearAllData: () => void;
+
+    // Global Sync State
+    syncStatus: 'idle' | 'syncing' | 'success' | 'error';
+    syncError: string | null;
+    setSyncStatus: (status: 'idle' | 'syncing' | 'success' | 'error') => void;
+    setSyncError: (error: string | null) => void;
 }
 
 export const useReconStore = create<ReconState>((set) => ({
@@ -70,6 +76,12 @@ export const useReconStore = create<ReconState>((set) => ({
     setOverrideLogs: (overrideLogs) => set({ overrideLogs }),
     setJournalInstructions: (journalInstructions) => set({ journalInstructions }),
     setReconProfiles: (reconProfiles) => set({ reconProfiles }),
+
+    // Global Sync State
+    syncStatus: 'idle',
+    syncError: null,
+    setSyncStatus: (status) => set({ syncStatus: status }),
+    setSyncError: (error) => set({ syncError: error }),
 
     addEntries: (newEntries, newImport) => set((state) => {
         const codes = Array.from(new Set(newEntries.map(e => e.companyCode)));

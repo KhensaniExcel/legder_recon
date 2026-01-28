@@ -23,7 +23,11 @@ export class SupabaseProvider implements IDatabaseProvider {
         if (Array.isArray(obj)) return obj.map(o => this.toDb(o));
         if (obj !== null && typeof obj === 'object') {
             return Object.keys(obj).reduce((acc, key) => {
-                const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+                let snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+
+                // Fix for "LC" suffix (e.g. debitLC -> debit_lc, NOT debit_l_c)
+                snakeKey = snakeKey.replace(/_l_c$/, '_lc');
+
                 acc[snakeKey] = this.toDb(obj[key]);
                 return acc;
             }, {} as any);
@@ -35,7 +39,13 @@ export class SupabaseProvider implements IDatabaseProvider {
         if (Array.isArray(obj)) return obj.map(o => this.fromDb(o));
         if (obj !== null && typeof obj === 'object') {
             return Object.keys(obj).reduce((acc, key) => {
-                const camelKey = key.replace(/(_\w)/g, m => m[1].toUpperCase());
+                let camelKey = key.replace(/(_\w)/g, m => m[1].toUpperCase());
+
+                // Fix for "LC" suffix (e.g. debitLc -> debitLC)
+                if (camelKey.endsWith('Lc')) {
+                    camelKey = camelKey.slice(0, -2) + 'LC';
+                }
+
                 acc[camelKey] = this.fromDb(obj[key]);
                 return acc;
             }, {} as any);

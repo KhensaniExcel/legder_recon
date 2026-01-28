@@ -1,5 +1,5 @@
 
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ImportMetadata, LedgerEntry, AccountDirectoryItem, ReconProfile } from '../types';
 import { Upload, FileText, Trash2, Database, Settings, AlertCircle, RefreshCw, X, Table, ShieldAlert, Cloud, Download, ArrowUpCircle, ArrowDownCircle, Code, Copy, Check } from 'lucide-react';
 import { processLedgerRow, buildOffsetMapping, getFuzzy } from '../utils/dataProcessor';
@@ -164,7 +164,7 @@ export default function ImportPage({
         <div className="space-y-6 animate-in slide-in-from-bottom-4">
           <div className="bg-white p-8 rounded-2xl border border-gray-200 shadow-xl flex flex-col items-center text-center">
             <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-6 border-4 ${syncStatus === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-600' :
-                syncStatus === 'error' ? 'bg-red-50 border-red-200 text-red-600' : 'bg-blue-50 border-blue-200 text-blue-600'
+              syncStatus === 'error' ? 'bg-red-50 border-red-200 text-red-600' : 'bg-blue-50 border-blue-200 text-blue-600'
               }`}>
               <Cloud size={40} className={syncStatus === 'syncing' ? 'animate-bounce' : ''} />
             </div>
@@ -246,9 +246,9 @@ export default function ImportPage({
                     <input type="text" placeholder="e.g. Jul22-Nov25 Recon" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 bg-white font-bold" value={label} onChange={(e) => setLabel(e.target.value)} />
                   </div>
                   <div className="pt-4">
-                    <label className={`w-full flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-10 cursor-pointer transition-all ${companyCode ? 'border-blue-300 bg-blue-50/50 hover:bg-blue-100/50' : 'border-gray-200 bg-gray-50 cursor-not-allowed'}`}>
+                    <label className={`w-full flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-10 cursor-pointer transition-all ${companyCode ? 'border-blue-300 bg-blue-50/50 hover:bg-blue-100/50' : 'border-gray-200 bg-gray-50 hover:bg-gray-100'}`}>
                       {isImporting ? <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div> : <><Upload className={`${companyCode ? 'text-blue-600' : 'text-gray-300'} mb-2`} size={32} /><span className="text-sm font-bold text-gray-700">Excel or CSV</span></>}
-                      <input type="file" accept=".csv, .xls, .xlsx" className="hidden" onChange={handleFileUpload} disabled={!companyCode || isImporting} />
+                      <input type="file" accept=".csv, .xls, .xlsx" className="hidden" onChange={handleFileUpload} disabled={isImporting} />
                     </label>
                   </div>
                 </div>

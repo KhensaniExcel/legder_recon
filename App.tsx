@@ -22,9 +22,8 @@ export default function App() {
     updateEntryWithLog, addAllocation, addJournalFix, addEntries, clearAllData
   } = store;
 
-  // Sync state
-  const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'success' | 'error'>('idle');
-  const [syncError, setSyncError] = useState<string | null>(null);
+  // Sync state from store
+  const { syncStatus, syncError, setSyncStatus, setSyncError } = store;
 
   const deferredSearchText = useDeferredValue(filters.searchText);
   const effectiveFilters = useMemo(() => ({
@@ -54,9 +53,17 @@ export default function App() {
   // Auto-Save Effect (Debounced)
   useEffect(() => {
     const timer = setTimeout(() => {
+      setSyncStatus('syncing');
       pushToSupabase({
         entries, imports, directory, allocations, overrideLogs, journalInstructions, companies, reconProfiles
-      }).catch(console.error);
+      }).then(() => {
+        setSyncStatus('success');
+        setTimeout(() => setSyncStatus('idle'), 2000);
+      }).catch((err) => {
+        console.error("Auto-save failed", err);
+        setSyncStatus('error');
+        setSyncError("Auto-save failed: " + (err.message || 'Unknown error'));
+      });
     }, 2000);
     return () => clearTimeout(timer);
   }, [entries, imports, directory, allocations, overrideLogs, journalInstructions, companies, reconProfiles]);
